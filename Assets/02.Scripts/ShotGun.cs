@@ -5,13 +5,13 @@ using UnityEngine.UI;
 
 public class ShotGun : MonoBehaviour
 {
+    public GameObject ReloadImage;          // 재장전 이미지
     public GameObject[] BulletPrefab;       // 탄
     public Transform Point;                 // 총구 위치
     public Text BulletCount;                // 탄 갯수
     private int MaxBulletCount = 6;         // 최댓치 탄 갯수
     public int NowBulletCount = 0;          // 현재 탄 갯수
     public float BulletSpeed = 10.0f;       // 탄 속도
-    public float BulletAttack = 2.0f;       // 탄 공격
 
     // Start is called before the first frame update
     void Start()
@@ -64,11 +64,38 @@ public class ShotGun : MonoBehaviour
         }
     }
 
+    public float ReloadTime = 3.0f;
+
     void Reload()
     {
         // 총 탄약 수에서 현재 탄약 수를 뺀 나머지 탄약 수를 재장전한다
         int reloadBullet = MaxBulletCount - NowBulletCount;
-        NowBulletCount += reloadBullet;
+        //NowBulletCount += reloadBullet;
+
+        for(int i = 1; i < reloadBullet + 1; i++)
+        {
+            int Dice = Random.Range(0, 2);
+            if(Dice == 1)
+            {
+                Time.timeScale = 0f;        // 게임 일시정지
+                ReloadImage.SetActive(true);
+                ReloadTime -= Time.deltaTime;
+                print(ReloadTime);
+                if (ReloadTime <= 0f)
+                {
+                    ReloadImage.SetActive(false);
+                    Time.timeScale = 1f;    // 게임 재개
+                    ReloadTime = 3.0f;      // 재장전 시간 초기화
+                }
+            }
+            else
+            {
+                NowBulletCount++;
+            }
+            print(Dice);
+            //print(i);
+        }
+        return;
         //print(Dice);
     }
 }
