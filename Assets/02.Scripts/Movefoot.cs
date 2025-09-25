@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Watch : MonoBehaviour
+public class Movefoot : MonoBehaviour
 {
+
     // Start is called before the first frame update
     void Start()
     {
@@ -22,10 +23,8 @@ public class Watch : MonoBehaviour
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         float yrot = 0.0f;
-        float zrot = 0.0f;
-        float zrotspd = 11.0f;
 
-        if(mousePos.x < transform.position.x)
+        if (mousePos.x < transform.position.x)
         {
             yrot = 180.0f;
         }
@@ -34,26 +33,6 @@ public class Watch : MonoBehaviour
             yrot = 0.0f;
         }
 
-        if(mousePos.y == 0)
-        {
-            zrot = 0.0f;
-        }
-        else
-        {
-            if(mousePos.y > 4.5f)
-            {
-                zrot = 50.0f;
-            }
-            else if(mousePos.y < -4.5f)
-            {
-                zrot = -50.0f;
-            }
-            else
-            {
-                zrot = mousePos.y * zrotspd;
-            }
-        }
-
-        transform.rotation = Quaternion.Euler(0, yrot, zrot);
+        transform.rotation = Quaternion.Euler(0, yrot, 0);
     }
 }
