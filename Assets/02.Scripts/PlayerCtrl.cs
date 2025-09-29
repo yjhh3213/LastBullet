@@ -18,7 +18,7 @@ public class PlayerCtrl : MonoBehaviour
 
     public int health = 1;              // 캐릭터 체력
     private bool dead = false;          // 캐릭터 사망 여부
-    public float speed = 10.0f;         // 캐릭터 속도
+    public float speed = 2.0f;         // 캐릭터 속도
     public float Dash = 15.0f;          // 캐릭터 대쉬 속도
     public Text DashCoolDownText;       // 대쉬 쿨타임 텍스트
 
@@ -70,10 +70,11 @@ public class PlayerCtrl : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rb.MovePosition(rb.position +  moveV * Time.fixedDeltaTime);
+         rb.MovePosition(rb.position + moveV * Time.fixedDeltaTime);
     }
 
     public float Walktime = 0.0f;
+    //bool isDash = false;
 
     void ObjMove()
     {
@@ -104,18 +105,19 @@ public class PlayerCtrl : MonoBehaviour
             Walktime = 0.0f;
         }
 
+        // 순간이동 Dash
         if (Input.GetKeyDown(KeyCode.LeftShift) && dashTimer <= 0f)
         {
-            //Dash
-            float dashDir = Input.GetAxisRaw("Horizontal"); // -1 (왼쪽), 0, 1 (오른쪽)
+            Vector2 dashDir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
-            if (dashDir != 0) // 좌우 입력 있을 때만 대쉬
+            if (dashDir != Vector2.zero) // 방향 입력이 있을 때만 순간이동
             {
-                rb.velocity = Move.normalized * speed * Dash * Time.deltaTime;
-                /*moveV = Move.normalized * speed * Dash;*/
+                // 순간이동 거리만큼 위치 이동
+                transform.position += (Vector3)(dashDir.normalized * Dash);
+
                 print("Dash!");
                 bodyRenderer.sprite = DashSprite;
-                StartCoroutine(ReturnIdle(0.2f));
+                StartCoroutine(ReturnIdle(0.15f));  // 짧게 Dash Sprite 유지
                 dashTimer = dashCoolDown;
             }
         }
@@ -123,9 +125,9 @@ public class PlayerCtrl : MonoBehaviour
         {
             moveV = Move.normalized * speed;
         }
+
         DashCoolDownText.text = "대쉬 : " + ((int)dashTimer).ToString();
     }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.CompareTag("Enemy") && !dead)
