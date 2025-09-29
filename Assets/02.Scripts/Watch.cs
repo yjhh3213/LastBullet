@@ -17,6 +17,7 @@ public class Watch : MonoBehaviour
     }
 
     // 캐릭터가 마우스를 바라보게 하는 코드
+    // MOUSE
     void RotateToMouse()
     {
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
