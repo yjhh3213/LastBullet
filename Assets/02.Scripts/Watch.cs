@@ -4,27 +4,57 @@ using UnityEngine;
 
 public class Watch : MonoBehaviour
 {
-    public Transform body;
     // Start is called before the first frame update
     void Start()
     {
-        
     }
 
     // Update is called once per frame
     void Update()
     {
+        //bodyRenderer = transform.Find("body").GetComponent<SpriteRenderer>();
         RotateToMouse();
     }
 
     // 캐릭터가 마우스를 바라보게 하는 코드
+    // MOUSE
     void RotateToMouse()
     {
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        Vector3 dir = mousePos - body.position;
-        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        float yrot = 0.0f;
+        float zrot = 0.0f;
+        float zrotspd = 11.0f;
 
-        body.rotation = Quaternion.Euler(0, 0, angle);
+        if(mousePos.x < transform.position.x)
+        {
+            yrot = 180.0f;
+        }
+        else
+        {
+            yrot = 0.0f;
+        }
+
+        if(mousePos.y == 0)
+        {
+            zrot = 0.0f;
+        }
+        else
+        {
+            if(mousePos.y > 4.5f)
+            {
+                zrot = 50.0f;
+            }
+            else if(mousePos.y < -4.5f)
+            {
+                zrot = -50.0f;
+            }
+            else
+            {
+                zrot = mousePos.y * zrotspd;
+            }
+        }
+
+        transform.rotation = Quaternion.Euler(0, yrot, zrot);
     }
 }

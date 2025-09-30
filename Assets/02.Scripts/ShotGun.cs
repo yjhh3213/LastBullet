@@ -1,17 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Profiling.Memory.Experimental;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ShotGun : MonoBehaviour
 {
+    public GameObject ReloadImage;          // 재장전 이미지
     public GameObject[] BulletPrefab;       // 탄
-    public Transform Point;                 // 총구 위치
+    public GameObject[] EmptyPrefab;        // 탄피
+    public Transform FirePoint;             // 총구 위치
+    public Transform EmptyBullet;           // 탄피 배출
     public Text BulletCount;                // 탄 갯수
     private int MaxBulletCount = 6;         // 최댓치 탄 갯수
     public int NowBulletCount = 0;          // 현재 탄 갯수
     public float BulletSpeed = 10.0f;       // 탄 속도
-    public float BulletAttack = 2.0f;       // 탄 공격
 
     // Start is called before the first frame update
     void Start()
@@ -26,6 +29,7 @@ public class ShotGun : MonoBehaviour
         BulletCount.text = NowBulletCount.ToString() + " " + "/" + " " + MaxBulletCount.ToString();
     }
 
+    public float EmptyBulletSpeed = 0.0f;
     void Conmand()
     {
         //탄약 발사
@@ -41,14 +45,18 @@ public class ShotGun : MonoBehaviour
                     for (int i = 0; i < BulletNumber; i++)
                     {
                         float BulletSpread = Random.Range(-15f, 15f);
-                        Quaternion bulletRot = Point.rotation * Quaternion.Euler(0, 0, BulletSpread);
+                        Quaternion bulletRot = FirePoint.rotation * Quaternion.Euler(0, 0, BulletSpread);
 
-                        GameObject Bullet = Instantiate(BulletPrefab[0], Point.position, bulletRot);
+                        GameObject Bullet = Instantiate(BulletPrefab[0], FirePoint.position, bulletRot);
 
                         Rigidbody2D rb = Bullet.GetComponent<Rigidbody2D>();
                         rb.velocity = bulletRot * Vector3.right * BulletSpeed;
                         Destroy(Bullet, 2.0f);
                     }
+                    EmptyBulletSpeed += Time.deltaTime;
+                    Quaternion EBrot = EmptyBullet.rotation * Quaternion.Euler(0, 0, -EmptyBulletSpeed);
+                    GameObject EB = Instantiate(EmptyPrefab[0], EmptyBullet.position, EBrot);
+                    Destroy(EB, 2.0f);
                     NowBulletCount--;
                 }
             }
@@ -64,11 +72,73 @@ public class ShotGun : MonoBehaviour
         }
     }
 
+    public float ReloadTime = 3.0f;     // QTE가 진행되는 동안 재장전 시간
+    bool isReloading = false;           // 재장전중인지
+    /// </summary>
+    public int qteMCount = 3;           // QTE 최대 횟수
+
     void Reload()
     {
+        if (isReloading) return;
+
         // 총 탄약 수에서 현재 탄약 수를 뺀 나머지 탄약 수를 재장전한다
         int reloadBullet = MaxBulletCount - NowBulletCount;
-        NowBulletCount += reloadBullet;
-        //print(Dice);
+        StartCoroutine(ReloadC(reloadBullet));
+    }
+
+    IEnumerator ReloadC(int reloadbullet)
+    {
+        isReloading = true;
+        int qte = 0;            // QTE 횟수
+
+        for(int i = 0; i < reloadbullet; i++)
+        {
+            // QTE 발생 여부 확률과 QTE 횟수가 최대보다 작을 때
+            bool DoQte = (Random.value < 0.5f) && (qte < qteMCount);
+
+            if (DoQte)
+            {
+                qte++;
+                KeyCode getkey = (KeyCode)Random.Range(65, 91);     // A~Z 랜덤
+                print((char)getkey);
+
+                ReloadImage.SetActive(true);
+
+                Time.timeScale = 0.2f;
+
+                float time = ReloadTime;
+                bool IsSuccess = false;
+
+                while(time > 0f)
+                {
+                    if (Input.GetKeyDown(getkey))
+                    {
+                        print("Reload!");
+                        NowBulletCount++;
+                        IsSuccess = true;
+                        break;
+                    }
+                    time -= Time.unscaledDeltaTime;
+                    yield return null;
+                }
+
+                if (!IsSuccess)
+                {
+                    print("Reload Fail!");
+                }
+
+                ReloadImage.SetActive(false);
+
+                Time.timeScale = 1f;
+            }
+            else
+            {
+                NowBulletCount++;
+                yield return new WaitForSeconds(0.1f);
+            }
+        }
+        isReloading = false;
+
     }
 }
+
