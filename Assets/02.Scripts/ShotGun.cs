@@ -104,8 +104,6 @@ public class ShotGun : MonoBehaviour
 
                 ReloadImage.SetActive(true);
 
-                Time.timeScale = 0.2f;
-
                 float time = ReloadTime;
                 bool IsSuccess = false;
 
@@ -128,8 +126,6 @@ public class ShotGun : MonoBehaviour
                 }
 
                 ReloadImage.SetActive(false);
-
-                Time.timeScale = 1f;
             }
             else
             {

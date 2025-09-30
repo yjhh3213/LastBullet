@@ -118,6 +118,8 @@ public class PlayerCtrl : MonoBehaviour
                 print("Dash!");
                 bodyRenderer.sprite = DashSprite;
                 StartCoroutine(ReturnIdle(0.15f));  // 짧게 Dash Sprite 유지
+
+                StartCoroutine(SpwanImage());
                 dashTimer = dashCoolDown;
             }
         }
@@ -167,5 +169,47 @@ public class PlayerCtrl : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         if (!dead) bodyRenderer.sprite = IdleSprite;
+    }
+
+    // Dash할 때 잔상남기기(진상 유지 시간, 사라지는 속도)
+    IEnumerator CreateafterImage(float duration, float fadespeed)
+    {
+        GameObject afterImage = new GameObject("AfterImage");
+        SpriteRenderer sr = afterImage.AddComponent<SpriteRenderer>();
+
+        sr.sprite = bodyRenderer.sprite;
+        sr.transform.localScale = body.localScale;
+        sr.flipX = bodyRenderer.flipX;
+        sr.sortingOrder = bodyRenderer.sortingOrder - 1;        // 본체보다 뒤에 배치
+        if(sr.transform.position.x < 0)
+        {
+            sr.transform.position = -body.position;
+        }
+        else
+        {
+            sr.transform.position = body.position;
+        }
+
+        Color color = sr.color;
+        float time = 0.0f;
+
+        while (time < duration)
+        {
+            color.a = Mathf.Lerp(1f, 0f, time / duration);
+            sr.color = color;
+            time += Time.deltaTime * fadespeed;
+            yield return null;
+        }
+
+        Destroy(afterImage);
+    }
+
+    IEnumerator SpwanImage()
+    {
+        for(int i = 0; i < 5; i++)
+        {
+            StartCoroutine(CreateafterImage(0.3f, 2f));
+            yield return new WaitForSeconds(0.03f);
+        }
     }
 }

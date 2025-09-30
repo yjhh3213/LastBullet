@@ -41,18 +41,7 @@ public class Watch : MonoBehaviour
         }
         else
         {
-            if(mousePos.y > 4.5f)
-            {
-                zrot = 50.0f;
-            }
-            else if(mousePos.y < -4.5f)
-            {
-                zrot = -50.0f;
-            }
-            else
-            {
-                zrot = mousePos.y * zrotspd;
-            }
+            zrot = mousePos.y * zrotspd;
         }
 
         transform.rotation = Quaternion.Euler(0, yrot, zrot);
