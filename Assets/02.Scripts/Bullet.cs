@@ -5,15 +5,19 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     public float Damage = 2.0f;
-    // Start is called before the first frame update
-    void Start()
+    EnemyData EnemyData;
+    
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        
-    }
+        if (collision.collider.CompareTag("Enemy"))
+        {
+            Enemy enemy = collision.collider.GetComponent<Enemy>();
+            if(enemy != null )
+            {
+                enemy.TakeDamage(Damage);
+            }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+            Destroy(gameObject);
+        }
     }
 }

@@ -6,7 +6,13 @@ using UnityEngine.UI;
 
 public class ShotGun : MonoBehaviour
 {
-    public GameObject ReloadImage;          // 재장전 이미지
+    public GameObject QImage;               // 재장전 이미지
+    public GameObject EImage;               // 재장전 이미지
+    public GameObject RImage;               // 재장전 이미지
+    public GameObject FailQImage;           // 실패한 재장전 이미지
+    public GameObject FailEImage;           // 실패한 재장전 이미지
+    public GameObject FailRImage;           // 실패한 재장전 이미지
+
     public GameObject[] BulletPrefab;       // 탄
     public GameObject[] EmptyPrefab;        // 탄피
     public Transform FirePoint;             // 총구 위치
@@ -67,8 +73,15 @@ public class ShotGun : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.R))
         {
-            Reload();
-            print("Reload");
+            if(NowBulletCount <= 0)
+            {
+                Reload();
+                print("Reload");
+            }
+            else
+            {
+                print("아직 탄이 남았습니다");
+            }
         }
     }
 
@@ -89,52 +102,69 @@ public class ShotGun : MonoBehaviour
     IEnumerator ReloadC(int reloadbullet)
     {
         isReloading = true;
-        int qte = 0;            // QTE 횟수
 
-        for(int i = 0; i < reloadbullet; i++)
+        KeyCode[] qte = new KeyCode[] { KeyCode.Q, KeyCode.E, KeyCode.R };
+        QImage.SetActive(true);
+        EImage.SetActive(true);
+        RImage.SetActive(true);
+
+        for (int i = 0; i < qte.Length; i++)
         {
-            // QTE 발생 여부 확률과 QTE 횟수가 최대보다 작을 때
-            bool DoQte = (Random.value < 0.5f) && (qte < qteMCount);
-
-            if (DoQte)
+            float time = ReloadTime;
+            bool IsSuccess = false;
+            
+            while(time > 0)
             {
-                qte++;
-                KeyCode getkey = (KeyCode)Random.Range(65, 91);     // A~Z 랜덤
-                print((char)getkey);
-
-                ReloadImage.SetActive(true);
-
-                float time = ReloadTime;
-                bool IsSuccess = false;
-
-                while(time > 0f)
+                if (Input.GetKeyDown(qte[i]))
                 {
-                    if (Input.GetKeyDown(getkey))
+                    print("QTE 성공");
+                    NowBulletCount += 2;
+                    IsSuccess = true;
+                    if (qte[i] == KeyCode.Q)
                     {
-                        print("Reload!");
-                        NowBulletCount++;
-                        IsSuccess = true;
-                        break;
+                        QImage.SetActive(false);
                     }
-                    time -= Time.unscaledDeltaTime;
-                    yield return null;
+                    else if (qte[i] == KeyCode.E)
+                    {
+                        EImage.SetActive(false);
+                    }
+                    else if (qte[i] == KeyCode.R)
+                    {
+                        RImage.SetActive(false);
+                    }
+                    break;
                 }
-
-                if (!IsSuccess)
-                {
-                    print("Reload Fail!");
-                }
-
-                ReloadImage.SetActive(false);
+                time -= Time.deltaTime;
+                yield return null;
             }
-            else
+
+            if (!IsSuccess)
             {
-                NowBulletCount++;
-                yield return new WaitForSeconds(0.1f);
+                print("QTE 실패!" + qte[i]);
+                if (qte[i] == KeyCode.Q)
+                {
+                    FailQImage.SetActive(true);
+                }
+                else if (qte[i] == KeyCode.E)
+                {
+                    FailEImage.SetActive(true);
+                }
+                else if (qte[i] == KeyCode.R)
+                {
+                    FailRImage.SetActive(true);
+                }
             }
+
+            yield return new WaitForSeconds(0.1f);
         }
         isReloading = false;
 
+        FailQImage.SetActive(false);
+        FailEImage.SetActive(false);
+        FailRImage.SetActive(false);
+        QImage.SetActive(false);
+        EImage.SetActive(false);
+        RImage.SetActive(false);
     }
 }
 
