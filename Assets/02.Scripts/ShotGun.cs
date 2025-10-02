@@ -3,15 +3,13 @@ using System.Collections.Generic;
 using UnityEditor.Profiling.Memory.Experimental;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 public class ShotGun : MonoBehaviour
 {
     public GameObject QImage;               // 재장전 이미지
     public GameObject EImage;               // 재장전 이미지
     public GameObject RImage;               // 재장전 이미지
-    public GameObject FailQImage;           // 실패한 재장전 이미지
-    public GameObject FailEImage;           // 실패한 재장전 이미지
-    public GameObject FailRImage;           // 실패한 재장전 이미지
 
     public GameObject[] BulletPrefab;       // 탄
     public GameObject[] EmptyPrefab;        // 탄피
@@ -115,24 +113,54 @@ public class ShotGun : MonoBehaviour
             
             while(time > 0)
             {
-                if (Input.GetKeyDown(qte[i]))
+                if (Input.anyKeyDown)
                 {
-                    print("QTE 성공");
-                    NowBulletCount += 2;
-                    IsSuccess = true;
-                    if (qte[i] == KeyCode.Q)
+                    bool correct = Input.GetKeyDown(qte[i]);
+
+                    if (correct)
                     {
-                        QImage.SetActive(false);
+                        print("QTE 성공");
+                        NowBulletCount += 2;
+                        IsSuccess = true;
+                        if (qte[i] == KeyCode.Q) QImage.SetActive(false);
+                        else if (qte[i] == KeyCode.E) EImage.SetActive(false);
+                        else if (qte[i] == KeyCode.R) RImage.SetActive(false);
+                        break;
                     }
-                    else if (qte[i] == KeyCode.E)
+                    
+                    else
                     {
-                        EImage.SetActive(false);
+                        foreach(KeyCode code in System.Enum.GetValues(typeof(KeyCode)))
+                        {
+                            if (Input.GetKeyDown(code))
+                            {
+                                bool isKeyBoardKey = (
+                                    code >= KeyCode.A && code <= KeyCode.Z);
+                                if (isKeyBoardKey)
+                                {
+                                    if(code == KeyCode.Q || code == KeyCode.E || code == KeyCode.T)
+                                    {
+                                        print("QTE 실패!");
+                                        isReloading = false;
+                                        QImage.SetActive(false);
+                                        EImage.SetActive(false);
+                                        RImage.SetActive(false);
+                                        yield break;
+                                    }
+
+                                    if (!qte.Contains(code))
+                                    {
+                                        print("QTE 실패!");
+                                        isReloading = false;
+                                        QImage.SetActive(false);
+                                        EImage.SetActive(false);
+                                        RImage.SetActive(false);
+                                        yield break;
+                                    }
+                                }
+                            }
+                        }
                     }
-                    else if (qte[i] == KeyCode.R)
-                    {
-                        RImage.SetActive(false);
-                    }
-                    break;
                 }
 
                 time -= Time.deltaTime;
@@ -141,19 +169,7 @@ public class ShotGun : MonoBehaviour
 
             if (!IsSuccess)
             {
-                print("QTE 실패!" + qte[i]);
-                if (qte[i] == KeyCode.Q)
-                {
-                    FailQImage.SetActive(true);
-                }
-                else if (qte[i] == KeyCode.E)
-                {
-                    FailEImage.SetActive(true);
-                }
-                else if (qte[i] == KeyCode.R)
-                {
-                    FailRImage.SetActive(true);
-                }
+                print("QTE 시간초과!");
                 break;
             }
 
@@ -161,9 +177,6 @@ public class ShotGun : MonoBehaviour
         }
         isReloading = false;
 
-        FailQImage.SetActive(false);
-        FailEImage.SetActive(false);
-        FailRImage.SetActive(false);
         QImage.SetActive(false);
         EImage.SetActive(false);
         RImage.SetActive(false);
