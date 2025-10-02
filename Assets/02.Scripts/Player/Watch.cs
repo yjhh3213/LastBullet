@@ -25,7 +25,8 @@ public class Watch : MonoBehaviour
         float yrot = 0.0f;
         float zrot = 0.0f;
         float zrotspd = 11.0f;
-
+        /*print(mousePos.y);
+        print(transform.position.y);*/
         if(mousePos.x < transform.position.x)
         {
             yrot = 180.0f;
@@ -35,25 +36,8 @@ public class Watch : MonoBehaviour
             yrot = 0.0f;
         }
 
-        if(mousePos.y == 0)
-        {
-            zrot = 0.0f;
-        }
-        else
-        {
-            if(mousePos.y > 4.5f)
-            {
-                zrot = 50.0f;
-            }
-            else if(mousePos.y < -4.5f)
-            {
-                zrot = -50.0f;
-            }
-            else
-            {
-                zrot = mousePos.y * zrotspd;
-            }
-        }
+        float pos = mousePos.y % 5;
+        zrot += pos * zrotspd;
 
         transform.rotation = Quaternion.Euler(0, yrot, zrot);
     }
