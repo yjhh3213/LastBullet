@@ -134,6 +134,7 @@ public class ShotGun : MonoBehaviour
                     }
                     break;
                 }
+
                 time -= Time.deltaTime;
                 yield return null;
             }
@@ -153,6 +154,7 @@ public class ShotGun : MonoBehaviour
                 {
                     FailRImage.SetActive(true);
                 }
+                break;
             }
 
             yield return new WaitForSeconds(0.1f);
@@ -167,4 +169,5 @@ public class ShotGun : MonoBehaviour
         RImage.SetActive(false);
     }
 }
+
 

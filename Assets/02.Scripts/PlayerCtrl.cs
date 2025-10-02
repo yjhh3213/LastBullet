@@ -63,9 +63,6 @@ public class PlayerCtrl : MonoBehaviour
 
         UpdateSprite();
 
-        if (Input.GetKeyDown(KeyCode.F)){
-            Dead();
-        }
     }
 
     private void FixedUpdate()
@@ -106,7 +103,7 @@ public class PlayerCtrl : MonoBehaviour
         }
 
         // 순간이동 Dash
-        if (Input.GetKeyDown(KeyCode.LeftShift) && dashTimer <= 0f)
+        if (Input.GetMouseButtonDown(1) && dashTimer <= 0f)
         {
             Vector2 dashDir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
@@ -130,16 +127,14 @@ public class PlayerCtrl : MonoBehaviour
 
         DashCoolDownText.text = "대쉬 : " + ((int)dashTimer).ToString();
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+
+    // collision Enemy
+    void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.CompareTag("Enemy") && !dead)
+        if(collision.collider.CompareTag("Enemy") && !dead)
         {
             health--;
-            if(health <= 0)
-            {
-                dead = true;
-                Dead();
-            }
+            Dead();
         }
     }
 
