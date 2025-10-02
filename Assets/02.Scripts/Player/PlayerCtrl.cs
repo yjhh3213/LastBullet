@@ -63,9 +63,6 @@ public class PlayerCtrl : MonoBehaviour
 
         UpdateSprite();
 
-        if (Input.GetKeyDown(KeyCode.F)){
-            Dead();
-        }
     }
 
     private void FixedUpdate()
@@ -106,18 +103,20 @@ public class PlayerCtrl : MonoBehaviour
         }
 
         // 순간이동 Dash
-        if (Input.GetKeyDown(KeyCode.LeftShift) && dashTimer <= 0f)
+        if (Input.GetMouseButtonDown(1) && dashTimer <= 0f)
         {
             Vector2 dashDir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
             if (dashDir != Vector2.zero) // 방향 입력이 있을 때만 순간이동
             {
+                bodyRenderer.sprite = DashSprite;
                 // 순간이동 거리만큼 위치 이동
                 transform.position += (Vector3)(dashDir.normalized * Dash);
 
                 print("Dash!");
-                bodyRenderer.sprite = DashSprite;
                 StartCoroutine(ReturnIdle(0.15f));  // 짧게 Dash Sprite 유지
+
+                StartCoroutine(SpwanImage());
                 dashTimer = dashCoolDown;
             }
         }
@@ -128,16 +127,14 @@ public class PlayerCtrl : MonoBehaviour
 
         DashCoolDownText.text = "대쉬 : " + ((int)dashTimer).ToString();
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+
+    // collision Enemy
+    void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.CompareTag("Enemy") && !dead)
+        if(collision.collider.CompareTag("Enemy") && !dead)
         {
             health--;
-            if(health <= 0)
-            {
-                dead = true;
-                Dead();
-            }
+            Dead();
         }
     }
 
@@ -167,5 +164,47 @@ public class PlayerCtrl : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         if (!dead) bodyRenderer.sprite = IdleSprite;
+    }
+
+    // Dash할 때 잔상남기기(진상 유지 시간, 사라지는 속도)
+    IEnumerator CreateafterImage(float duration, float fadespeed)
+    {
+        GameObject afterImage = new GameObject("AfterImage");
+        SpriteRenderer sr = afterImage.AddComponent<SpriteRenderer>();
+
+        sr.sprite = bodyRenderer.sprite;
+        sr.transform.localScale = body.localScale;
+        sr.flipX = bodyRenderer.flipX;
+        sr.sortingOrder = bodyRenderer.sortingOrder - 1;        // 본체보다 뒤에 배치
+        if(sr.transform.position.x < 0)
+        {
+            sr.transform.position = -body.position;
+        }
+        else
+        {
+            sr.transform.position = body.position;
+        }
+
+        Color color = sr.color;
+        float time = 0.0f;
+
+        while (time < duration)
+        {
+            color.a = Mathf.Lerp(1f, 0f, time / duration);
+            sr.color = color;
+            time += Time.deltaTime * fadespeed;
+            yield return null;
+        }
+
+        Destroy(afterImage);
+    }
+
+    IEnumerator SpwanImage()
+    {
+        for(int i = 0; i < 5; i++)
+        {
+            StartCoroutine(CreateafterImage(0.3f, 2f));
+            yield return new WaitForSeconds(0.03f);
+        }
     }
 }
