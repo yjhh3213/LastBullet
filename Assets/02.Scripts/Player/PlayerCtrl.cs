@@ -109,11 +109,11 @@ public class PlayerCtrl : MonoBehaviour
 
             if (dashDir != Vector2.zero) // 방향 입력이 있을 때만 순간이동
             {
+                bodyRenderer.sprite = DashSprite;
                 // 순간이동 거리만큼 위치 이동
                 transform.position += (Vector3)(dashDir.normalized * Dash);
 
                 print("Dash!");
-                bodyRenderer.sprite = DashSprite;
                 StartCoroutine(ReturnIdle(0.15f));  // 짧게 Dash Sprite 유지
 
                 StartCoroutine(SpwanImage());
