@@ -111,12 +111,13 @@ public class PlayerCtrl : MonoBehaviour
             {
                 bodyRenderer.sprite = DashSprite;
                 // 순간이동 거리만큼 위치 이동
-                transform.position += (Vector3)(dashDir.normalized * Dash);
-
+                /*transform.position += (Vector3)(dashDir.normalized * Dash);*/
+                StartCoroutine(DashMove(dashDir.normalized));
+                //rb.AddForce(dashDir.normalized * Dash, ForceMode2D.Impulse);
                 print("Dash!");
                 StartCoroutine(ReturnIdle(0.15f));  // 짧게 Dash Sprite 유지
 
-                StartCoroutine(SpwanImage());
+                /*StartCoroutine(SpwanImage());*/
                 dashTimer = dashCoolDown;
             }
         }
@@ -126,6 +127,22 @@ public class PlayerCtrl : MonoBehaviour
         }
 
         DashCoolDownText.text = "대쉬 : " + ((int)dashTimer).ToString();
+    }
+
+    IEnumerator DashMove(Vector2 dir)
+    {
+        float dashDuration = 0.25f;
+        float elapsed = 0f;
+
+        while (elapsed < dashDuration)
+        {
+            rb.MovePosition(rb.position + dir * Dash * Time.fixedDeltaTime);
+            elapsed += Time.fixedDeltaTime;
+
+            // 잔상 생성 주기 조절
+            StartCoroutine(CreateafterImage(0.25f, 3f));
+            yield return new WaitForFixedUpdate();
+        }
     }
 
     // collision Enemy
@@ -173,26 +190,20 @@ public class PlayerCtrl : MonoBehaviour
         SpriteRenderer sr = afterImage.AddComponent<SpriteRenderer>();
 
         sr.sprite = bodyRenderer.sprite;
+        sr.transform.position = body.position;
         sr.transform.localScale = body.localScale;
         sr.flipX = bodyRenderer.flipX;
         sr.sortingOrder = bodyRenderer.sortingOrder - 1;        // 본체보다 뒤에 배치
-        if(sr.transform.position.x < 0)
-        {
-            sr.transform.position = -body.position;
-        }
-        else
-        {
-            sr.transform.position = body.position;
-        }
 
-        Color color = sr.color;
-        float time = 0.0f;
+        Color color = bodyRenderer.color;
+        sr.color = new Color(color.r, color.g, color.b, 0.8f);
+        float elapsed = 0.0f;
 
-        while (time < duration)
+        while (elapsed < duration)
         {
-            color.a = Mathf.Lerp(1f, 0f, time / duration);
-            sr.color = color;
-            time += Time.deltaTime * fadespeed;
+            float t = elapsed / duration;
+            sr.color = new Color(color.r, color.g, color.b, Mathf.Lerp(0.8f, 0f, t));
+            elapsed += Time.deltaTime * fadespeed;
             yield return null;
         }
 
@@ -201,10 +212,10 @@ public class PlayerCtrl : MonoBehaviour
 
     IEnumerator SpwanImage()
     {
-        for(int i = 0; i < 5; i++)
+        for(int i = 0; i < 10; i++)
         {
-            StartCoroutine(CreateafterImage(0.3f, 2f));
-            yield return new WaitForSeconds(0.03f);
+            StartCoroutine(CreateafterImage(0.5f, 5f));
+            yield return new WaitForSeconds(0.02f);
         }
     }
 }

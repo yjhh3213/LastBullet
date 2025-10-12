@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Watch : MonoBehaviour
 {
+    float zrot_Limit = 50.0f;
+    float zrot_spd = 10.0f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -21,24 +24,12 @@ public class Watch : MonoBehaviour
     void RotateToMouse()
     {
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 dir = mousePos - transform.position;
 
-        float yrot = 0.0f;
-        float zrot = 0.0f;
-        float zrotspd = 11.0f;
-        /*print(mousePos.y);
-        print(transform.position.y);*/
-        if(mousePos.x < transform.position.x)
-        {
-            yrot = 180.0f;
-        }
-        else
-        {
-            yrot = 0.0f;
-        }
+        float yrot = (mousePos.x < transform.position.x) ? 180f : 0f;
 
-        float pos = mousePos.y % 5;
-        zrot += pos * zrotspd;
+        float normalizedY = Mathf.Clamp((mousePos.y - transform.position.y) * zrot_spd, -zrot_Limit, zrot_Limit);
 
-        transform.rotation = Quaternion.Euler(0, yrot, zrot);
+        transform.rotation = Quaternion.Euler(0, yrot, normalizedY);
     }
 }

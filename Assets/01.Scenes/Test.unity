@@ -166,10 +166,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b1b6fb7a81ca394fb6a8da2fbe0dce5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  monsterPrefab: {fileID: 6951215236074127801, guid: 32e305f0fb9d65f41ab5a33d208ff214, type: 3}
+  monsterPrefabA: {fileID: 0}
+  monsterPrefabB: {fileID: 0}
   spawnDelay: 0.2
-  baseMonsterCount: 20
-  addPerWave: 10
+  minWave: 1
+  maxWave: 8
+  A_startCount: 20
+  A_addPerWave: 10
+  B_startWave: 3
+  B_startCount: 5
+  B_addper2Wave: 2
   minX: -50
   maxX: 50
   minZ: -50
@@ -1335,7 +1341,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1662413099762089248, guid: e833d11cf115ebc4d8057692f386a38b, type: 3}
       propertyPath: m_SortingOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1662413099879982463, guid: e833d11cf115ebc4d8057692f386a38b, type: 3}
       propertyPath: EImage
@@ -1371,11 +1377,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1662413100527780773, guid: e833d11cf115ebc4d8057692f386a38b, type: 3}
       propertyPath: m_SortingOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1662413100642505253, guid: e833d11cf115ebc4d8057692f386a38b, type: 3}
       propertyPath: Dash
-      value: 2
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 1662413100642505253, guid: e833d11cf115ebc4d8057692f386a38b, type: 3}
       propertyPath: DashCoolDownText
@@ -1443,7 +1449,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1662413100709124660, guid: e833d11cf115ebc4d8057692f386a38b, type: 3}
       propertyPath: m_SortingOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1662413100709124661, guid: e833d11cf115ebc4d8057692f386a38b, type: 3}
       propertyPath: m_TagString
@@ -1455,7 +1461,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2062553871259030108, guid: e833d11cf115ebc4d8057692f386a38b, type: 3}
       propertyPath: m_SortingOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e833d11cf115ebc4d8057692f386a38b, type: 3}
