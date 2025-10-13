@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using UnityEditor.Profiling.Memory.Experimental;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 public class ShotGun : MonoBehaviour
 {
-    public GameObject ReloadImage;          // 재장전 이미지
+    public GameObject QImage;               // 재장전 이미지
+    public GameObject EImage;               // 재장전 이미지
+    public GameObject RImage;               // 재장전 이미지
+
     public GameObject[] BulletPrefab;       // 탄
     public GameObject[] EmptyPrefab;        // 탄피
     public Transform FirePoint;             // 총구 위치
@@ -67,8 +71,15 @@ public class ShotGun : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.R))
         {
-            Reload();
-            print("Reload");
+            if(NowBulletCount <= 0)
+            {
+                Reload();
+                print("Reload");
+            }
+            else
+            {
+                print("아직 탄이 남았습니다");
+            }
         }
     }
 
@@ -89,56 +100,87 @@ public class ShotGun : MonoBehaviour
     IEnumerator ReloadC(int reloadbullet)
     {
         isReloading = true;
-        int qte = 0;            // QTE 횟수
 
-        for(int i = 0; i < reloadbullet; i++)
+        KeyCode[] qte = new KeyCode[] { KeyCode.Q, KeyCode.E, KeyCode.R };
+        QImage.SetActive(true);
+        EImage.SetActive(true);
+        RImage.SetActive(true);
+
+        for (int i = 0; i < qte.Length; i++)
         {
-            // QTE 발생 여부 확률과 QTE 횟수가 최대보다 작을 때
-            bool DoQte = (Random.value < 0.5f) && (qte < qteMCount);
-
-            if (DoQte)
+            float time = ReloadTime;
+            bool IsSuccess = false;
+            
+            while(time > 0)
             {
-                qte++;
-                KeyCode getkey = (KeyCode)Random.Range(65, 91);     // A~Z 랜덤
-                print((char)getkey);
-
-                ReloadImage.SetActive(true);
-
-                Time.timeScale = 0.2f;
-
-                float time = ReloadTime;
-                bool IsSuccess = false;
-
-                while(time > 0f)
+                if (Input.anyKeyDown)
                 {
-                    if (Input.GetKeyDown(getkey))
+                    bool correct = Input.GetKeyDown(qte[i]);
+
+                    if (correct)
                     {
-                        print("Reload!");
-                        NowBulletCount++;
+                        print("QTE 성공");
+                        NowBulletCount += 2;
                         IsSuccess = true;
+                        if (qte[i] == KeyCode.Q) QImage.SetActive(false);
+                        else if (qte[i] == KeyCode.E) EImage.SetActive(false);
+                        else if (qte[i] == KeyCode.R) RImage.SetActive(false);
                         break;
                     }
-                    time -= Time.unscaledDeltaTime;
-                    yield return null;
+                    
+                    else
+                    {
+                        foreach(KeyCode code in System.Enum.GetValues(typeof(KeyCode)))
+                        {
+                            if (Input.GetKeyDown(code))
+                            {
+                                bool isKeyBoardKey = (
+                                    code >= KeyCode.A && code <= KeyCode.Z);
+                                if (isKeyBoardKey)
+                                {
+                                    if(code == KeyCode.Q || code == KeyCode.E || code == KeyCode.T)
+                                    {
+                                        print("QTE 실패!");
+                                        isReloading = false;
+                                        QImage.SetActive(false);
+                                        EImage.SetActive(false);
+                                        RImage.SetActive(false);
+                                        yield break;
+                                    }
+
+                                    if (!qte.Contains(code))
+                                    {
+                                        print("QTE 실패!");
+                                        isReloading = false;
+                                        QImage.SetActive(false);
+                                        EImage.SetActive(false);
+                                        RImage.SetActive(false);
+                                        yield break;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
 
-                if (!IsSuccess)
-                {
-                    print("Reload Fail!");
-                }
-
-                ReloadImage.SetActive(false);
-
-                Time.timeScale = 1f;
+                time -= Time.deltaTime;
+                yield return null;
             }
-            else
+
+            if (!IsSuccess)
             {
-                NowBulletCount++;
-                yield return new WaitForSeconds(0.1f);
+                print("QTE 시간초과!");
+                break;
             }
+
+            yield return new WaitForSeconds(0.1f);
         }
         isReloading = false;
 
+        QImage.SetActive(false);
+        EImage.SetActive(false);
+        RImage.SetActive(false);
     }
 }
+
 

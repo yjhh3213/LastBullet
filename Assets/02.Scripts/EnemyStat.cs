@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyMove : MonoBehaviour
+public class EnemyStat : MonoBehaviour
 {
     public EnemyData data;
     private Transform player;
@@ -37,5 +37,21 @@ public class EnemyMove : MonoBehaviour
         transform.position += dir * EnemySpeed * Time.deltaTime;
 
         
+    }
+
+    public void TakeDamage(float damage)
+    {
+        EnemyHP -= damage;
+        print("Enemy HP : " + EnemyHP);
+
+        if (EnemyHP <= 0)
+        {
+            Die();
+        }
+    }
+
+    void Die()
+    {
+        Destroy(gameObject);
     }
 }
