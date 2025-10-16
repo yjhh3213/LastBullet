@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyMove : MonoBehaviour
+public class EnemyStat : MonoBehaviour
 {
     public EnemyData data;
     private Transform player;
@@ -35,15 +35,16 @@ public class EnemyMove : MonoBehaviour
         Vector3 dir = (player.position - transform.position).normalized;
 
         transform.position += dir * EnemySpeed * Time.deltaTime;
+
+        
     }
 
-    // Bullet to Damage
     public void TakeDamage(float damage)
     {
         EnemyHP -= damage;
         print("Enemy HP : " + EnemyHP);
 
-        if(EnemyHP <= 0)
+        if (EnemyHP <= 0)
         {
             Die();
         }
