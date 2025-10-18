@@ -100,7 +100,7 @@ public class EnemySpawn : MonoBehaviour
         }
 
         // ===== 섞은 순서대로 스폰 =====
-        foreach (var prefab in toSpawn)
+        foreach (var prefab in toSpawn) // 타입 변수명 in 컬렉션 명 
         {
             SpawnMonster(prefab);
             if (spawnDelay > 0f)

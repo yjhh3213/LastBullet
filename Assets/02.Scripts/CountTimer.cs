@@ -62,7 +62,6 @@ public class CountTimer : MonoBehaviour
 
     void TimerEnd()
     {
-        Debug.Log("웨이브 종료! 다음 웨이브 시작");
         WaveEnded = true;
 
         CurrentWave++;
