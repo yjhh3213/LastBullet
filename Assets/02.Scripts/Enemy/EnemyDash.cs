@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class EnemyMove : MonoBehaviour
+public class EnemyDash : MonoBehaviour
 {
     public Transform player;
 
