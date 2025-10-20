@@ -140,7 +140,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &62567326
 RectTransform:
   m_ObjectHideFlags: 0
@@ -288,8 +288,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b1b6fb7a81ca394fb6a8da2fbe0dce5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  monsterPrefabA: {fileID: 0}
-  monsterPrefabB: {fileID: 0}
+  monsterPrefabA: {fileID: 6951215236074127801, guid: 32e305f0fb9d65f41ab5a33d208ff214, type: 3}
+  monsterPrefabB: {fileID: 6951215236074127801, guid: 32e305f0fb9d65f41ab5a33d208ff214, type: 3}
   spawnDelay: 0.2
   minWave: 1
   maxWave: 8
@@ -403,7 +403,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &461484767
 RectTransform:
   m_ObjectHideFlags: 0
@@ -937,7 +937,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &670243720
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1487,17 +1487,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SetCardobj:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 461484766}
+  - {fileID: 670243719}
+  - {fileID: 62567325}
   CardImage:
-  - {fileID: 21300000, guid: 6a29db7650a8bcd4c98e857bbad441cd, type: 3}
-  - {fileID: 21300000, guid: 4fca6ea73b139f645850cf4e418172a4, type: 3}
-  - {fileID: 21300000, guid: 1cd2330b34d76f34aa4f0f0b9ddefa59, type: 3}
-  - {fileID: 21300000, guid: 769b732703fbaa648a32b49751f6cd4d, type: 3}
-  - {fileID: 21300000, guid: 47dd2aada6dbf0048bff1ded5b3b983e, type: 3}
-  - {fileID: 21300000, guid: 37c6c8b4fe1e5ee469d72f33f7013f4c, type: 3}
-  - {fileID: 21300000, guid: db299f5d4476f2f41a425092f881db51, type: 3}
+  - {fileID: -1140806117, guid: 6a29db7650a8bcd4c98e857bbad441cd, type: 3}
+  - {fileID: -2109041120, guid: 6a29db7650a8bcd4c98e857bbad441cd, type: 3}
+  - {fileID: -1260473792, guid: 6a29db7650a8bcd4c98e857bbad441cd, type: 3}
+  - {fileID: 138589828, guid: 6a29db7650a8bcd4c98e857bbad441cd, type: 3}
+  - {fileID: -489342179, guid: 6a29db7650a8bcd4c98e857bbad441cd, type: 3}
+  - {fileID: 1778373267, guid: 6a29db7650a8bcd4c98e857bbad441cd, type: 3}
+  - {fileID: 1414616383, guid: 6a29db7650a8bcd4c98e857bbad441cd, type: 3}
   ShotGunCard: 0
   BulletCard: 0
   barrelCard: 0
