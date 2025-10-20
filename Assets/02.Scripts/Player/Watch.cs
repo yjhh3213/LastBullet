@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class Watch : MonoBehaviour
 {
+<<<<<<< HEAD
     float zrot_Limit = 50.0f;       // z축 회전 제한 각도
     float zrot_spd = 10.0f;         // z축 회전 반응 속도
 
+=======
+>>>>>>> Player
     // Start is called before the first frame update
     void Start()
     {
@@ -24,6 +27,7 @@ public class Watch : MonoBehaviour
     void RotateToMouse()
     {
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+<<<<<<< HEAD
         Vector3 dir = mousePos - transform.position;
 
         // 좌우 방향 결정
@@ -33,5 +37,26 @@ public class Watch : MonoBehaviour
         float normalizedY = Mathf.Clamp((mousePos.y - transform.position.y) * zrot_spd, -zrot_Limit, zrot_Limit);
 
         transform.rotation = Quaternion.Euler(0, yrot, normalizedY);
+=======
+
+        float yrot = 0.0f;
+        float zrot = 0.0f;
+        float zrotspd = 11.0f;
+        /*print(mousePos.y);
+        print(transform.position.y);*/
+        if(mousePos.x < transform.position.x)
+        {
+            yrot = 180.0f;
+        }
+        else
+        {
+            yrot = 0.0f;
+        }
+
+        float pos = mousePos.y % 5;
+        zrot += pos * zrotspd;
+
+        transform.rotation = Quaternion.Euler(0, yrot, zrot);
+>>>>>>> Player
     }
 }

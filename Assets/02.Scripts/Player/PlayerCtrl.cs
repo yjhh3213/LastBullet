@@ -5,7 +5,10 @@ using UnityEngine.UI;
 
 public class PlayerCtrl : MonoBehaviour
 {
+<<<<<<< HEAD
     [Header("Sprites")]
+=======
+>>>>>>> Player
     public Sprite IdleSprite;           // Idle.png
     public Sprite DashSprite;           // Dash.png
     public Sprite DeathSprite;          // Death.png
@@ -17,22 +20,33 @@ public class PlayerCtrl : MonoBehaviour
     public Sprite foot3;
     public Sprite foot4;
 
+<<<<<<< HEAD
     [Header("Stats")]
     public int health = 1;              // 캐릭터 체력
     private bool dead = false;          // 캐릭터 사망 여부
     bool isDashing = false;
+=======
+    public int health = 1;              // 캐릭터 체력
+    private bool dead = false;          // 캐릭터 사망 여부
+>>>>>>> Player
     public float speed = 2.0f;         // 캐릭터 속도
     public float Dash = 15.0f;          // 캐릭터 대쉬 속도
     public Text DashCoolDownText;       // 대쉬 쿨타임 텍스트
 
+<<<<<<< HEAD
     [Header("Transform")]
+=======
+>>>>>>> Player
     public Transform body;
     public Transform foot;
     private SpriteRenderer bodyRenderer;
     private SpriteRenderer footRenderer;
 
     Vector2 moveV;                      // 캐릭터 조작키
+<<<<<<< HEAD
     Vector2 dashdir;
+=======
+>>>>>>> Player
     Rigidbody2D rb;                     // 캐릭터 물리
 
 
@@ -59,6 +73,7 @@ public class PlayerCtrl : MonoBehaviour
     {
         if (dead) return;                       // 죽었으면 입력 막기
 
+<<<<<<< HEAD
         if (dashTimer > 0) 
             dashTimer -= Time.deltaTime;
 
@@ -66,11 +81,20 @@ public class PlayerCtrl : MonoBehaviour
 
         if (!isDashing)
             ObjMove();
+=======
+        ObjMove();
+
+        if (dashTimer > 0)
+        {
+            dashTimer -= Time.deltaTime;
+        }
+>>>>>>> Player
 
         UpdateSprite();
 
     }
 
+<<<<<<< HEAD
     public float Walktime = 0.0f;
 
     void ObjMove()
@@ -141,6 +165,69 @@ public class PlayerCtrl : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
         isDashing = false;
+=======
+    private void FixedUpdate()
+    {
+         rb.MovePosition(rb.position + moveV * Time.fixedDeltaTime);
+    }
+
+    public float Walktime = 0.0f;
+    //bool isDash = false;
+
+    void ObjMove()
+    {
+        //W, A, S, D키 및 상하좌우키 이동 입력받기
+        Vector2 Move = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+
+        if (Move.x > 0 || Move.x < 0 || Move.y < 0 || Move.y > 0)
+        {
+            Walktime += Time.deltaTime;
+
+            if (Walktime > 0.0f)
+            {
+                footRenderer.sprite = foot1;
+            }
+            else if (Walktime > 0.15f)
+            {
+                footRenderer.sprite = foot2;
+            }
+            else if (Walktime > 0.25f)
+            {
+                footRenderer.sprite = foot3;
+            }
+            Walktime = 0.0f;
+        }
+        else
+        {
+            footRenderer.sprite = foot0;
+            Walktime = 0.0f;
+        }
+
+        // 순간이동 Dash
+        if (Input.GetMouseButtonDown(1) && dashTimer <= 0f)
+        {
+            Vector2 dashDir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+
+            if (dashDir != Vector2.zero) // 방향 입력이 있을 때만 순간이동
+            {
+                bodyRenderer.sprite = DashSprite;
+                // 순간이동 거리만큼 위치 이동
+                transform.position += (Vector3)(dashDir.normalized * Dash);
+
+                print("Dash!");
+                StartCoroutine(ReturnIdle(0.15f));  // 짧게 Dash Sprite 유지
+
+                StartCoroutine(SpwanImage());
+                dashTimer = dashCoolDown;
+            }
+        }
+        else
+        {
+            moveV = Move.normalized * speed;
+        }
+
+        DashCoolDownText.text = "대쉬 : " + ((int)dashTimer).ToString();
+>>>>>>> Player
     }
 
     // collision Enemy
@@ -188,6 +275,7 @@ public class PlayerCtrl : MonoBehaviour
         SpriteRenderer sr = afterImage.AddComponent<SpriteRenderer>();
 
         sr.sprite = bodyRenderer.sprite;
+<<<<<<< HEAD
         sr.transform.position = body.position;
         sr.transform.localScale = body.localScale;
         sr.flipX = bodyRenderer.flipX;
@@ -202,6 +290,28 @@ public class PlayerCtrl : MonoBehaviour
             float t = elapsed / duration;
             sr.color = new Color(color.r, color.g, color.b, Mathf.Lerp(0.8f, 0f, t));
             elapsed += Time.deltaTime * fadespeed;
+=======
+        sr.transform.localScale = body.localScale;
+        sr.flipX = bodyRenderer.flipX;
+        sr.sortingOrder = bodyRenderer.sortingOrder - 1;        // 본체보다 뒤에 배치
+        if(sr.transform.position.x < 0)
+        {
+            sr.transform.position = -body.position;
+        }
+        else
+        {
+            sr.transform.position = body.position;
+        }
+
+        Color color = sr.color;
+        float time = 0.0f;
+
+        while (time < duration)
+        {
+            color.a = Mathf.Lerp(1f, 0f, time / duration);
+            sr.color = color;
+            time += Time.deltaTime * fadespeed;
+>>>>>>> Player
             yield return null;
         }
 
@@ -210,10 +320,17 @@ public class PlayerCtrl : MonoBehaviour
 
     IEnumerator SpwanImage()
     {
+<<<<<<< HEAD
         for(int i = 0; i < 10; i++)
         {
             StartCoroutine(CreateafterImage(0.5f, 5f));
             yield return new WaitForSeconds(0.02f);
+=======
+        for(int i = 0; i < 5; i++)
+        {
+            StartCoroutine(CreateafterImage(0.3f, 2f));
+            yield return new WaitForSeconds(0.03f);
+>>>>>>> Player
         }
     }
 }

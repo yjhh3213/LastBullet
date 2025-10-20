@@ -166,6 +166,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b1b6fb7a81ca394fb6a8da2fbe0dce5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+<<<<<<< HEAD
   monsterPrefabA: {fileID: 6951215236074127801, guid: 32e305f0fb9d65f41ab5a33d208ff214, type: 3}
   monsterPrefabB: {fileID: 6469340161698999690, guid: 87c74ca9fb5235d4db8d2cfb1ca9c9ee, type: 3}
   monsterPrefabC: {fileID: 2090436113131965345, guid: 621c469f2d1a57147bd3ae0138c763af, type: 3}
@@ -180,6 +181,12 @@ MonoBehaviour:
   C_starWave: 4
   C_starCount: 5
   C_addperWave: 1
+=======
+  monsterPrefab: {fileID: 6951215236074127801, guid: 32e305f0fb9d65f41ab5a33d208ff214, type: 3}
+  spawnDelay: 0.2
+  baseMonsterCount: 20
+  addPerWave: 10
+>>>>>>> Player
   minX: -50
   maxX: 50
   minZ: -50
