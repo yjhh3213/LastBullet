@@ -8,14 +8,15 @@ public class EnemyStat : MonoBehaviour
     private Transform player;
     public float EnemySpeed;
     public float EnemyHP;
-   
-    private void Start() {
+
+    private void Start()
+    {
         if (data == null)
         {
             Debug.LogWarning("몬스터 데이터가 연결되지 않았습니다");
             return;
         }
-        else if(data != null)
+        else if (data != null)
         {
             EnemySpeed = data.speed;
             EnemyHP = data.hp;
@@ -23,20 +24,21 @@ public class EnemyStat : MonoBehaviour
 
         player = GameObject.FindGameObjectWithTag("Player")?.transform;
 
-        if(player == null)
+        if (player == null)
         {
             Debug.LogWarning("Player가 연결되지 않았습니다");
         }
     }
 
-    private void Update() {
-        if(player == null) return;
+    private void Update()
+    {
+        if (player == null) return;
 
         Vector3 dir = (player.position - transform.position).normalized;
 
         transform.position += dir * EnemySpeed * Time.deltaTime;
 
-        
+
     }
 
     public void TakeDamage(float damage)
