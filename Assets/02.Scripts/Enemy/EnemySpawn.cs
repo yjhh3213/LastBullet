@@ -1,36 +1,29 @@
-ï»¿using UnityEngine;
-using System.Collections.Generic;
+using UnityEngine;
 using System.Collections;
 
 public class EnemySpawn : MonoBehaviour
 {
-    [Header("ëª¬ìŠ¤í„° ì„¤ì •")]
-    public GameObject monsterPrefabA; // 1~8ë¼ ì „ë¶€
-    public GameObject monsterPrefabB; // 3~8ë¼ 
-    public GameObject monsterPrefabC; // 4~8ë¼
+    [Header("¸ó½ºÅÍ ¼³Á¤")]
+    public GameObject monsterPrefabA; // 1~8¶ó ÀüºÎ
+    public GameObject monsterPrefabB; // 3~8¶ó 
 
-    [Header("ëª¬ìŠ¤í„° ìŠ¤í°ì‹œê°„")]
+    [Header("¸ó½ºÅÍ ½ºÆù½Ã°£")]
     public float spawnDelay = 0.2f;
 
-    [Header("ì›¨ì´ë¸Œ ì„¤ì •")]
+    [Header("¿şÀÌºê ¼³Á¤")]
     public int minWave = 1;
     public int maxWave = 8;
 
-    [Header("ê¸°ë³¸ì¢€ë¹„ ê·œì¹™")]
-    public int A_startCount = 20;   // 1ì›¨ì´ë¸Œ ê¸°ë³¸ ìˆ˜
-    public int A_addPerWave = 10;   // ì›¨ì´ë¸Œë§ˆë‹¤ ì¶”ê°€
+    [Header("±âº»Á»ºñ ±ÔÄ¢")]
+    public int A_startCount = 20;   // 1¿şÀÌºê ±âº» ¼ö
+    public int A_addPerWave = 10;         // ¿şÀÌºê¸¶´Ù Ãß°¡
 
-    [Header("ì¢€ë¹„ ë©§ë¼ì§€ ê·œì¹™")]
-    public int B_startWave = 3;   // ì‹œì‘ ì›¨ì´ë¸Œ
-    public int B_startCount = 5; //  ì²« ë“±ì¥ ìˆ˜
-    public int B_addper2Wave = 2; // ì§ìˆ˜ ì›¨ì´ë¸Œ ë§ˆë‹¤ ëˆ„ì  
+    [Header("Á»ºñ ¸äµÅÁö ±ÔÄ¢")]
+    public int B_startWave = 3;
+    public int B_startCount = 5;
+    public int B_addper2Wave = 2;
 
-    [Header("ëŒì—°ë³€ì´ ëª¬ìŠ¤í„° ê·œì¹™")]
-    public int C_starWave = 4;
-    public int C_starCount = 5;
-    public int C_addperWave = 1;
-
-    [Header("ë§µ ë²”ìœ„")]
+    [Header("¸Ê ¹üÀ§")]
     public float minX = -50f;
     public float maxX = 50f;
     public float minZ = -50f;
@@ -38,7 +31,7 @@ public class EnemySpawn : MonoBehaviour
     public float minY = -50f;
     public float maxY = 50f;
 
-    [Header("ì°¸ì¡°")]
+    [Header("ÂüÁ¶")]
     public CountTimer countTimer;
 
     private bool spawning = false;
@@ -51,11 +44,11 @@ public class EnemySpawn : MonoBehaviour
 
         if (wave < minWave || wave > maxWave) return;
         if (maxWave < countTimer.CurrentWave) return;
-        // WaveEndedê°€ trueì´ë©´ ìƒˆë¡œìš´ ì›¨ì´ë¸Œ ì‹œì‘
+        // WaveEnded°¡ trueÀÌ¸é »õ·Î¿î ¿şÀÌºê ½ÃÀÛ
         if (countTimer.WaveEnded && !spawning)
         {
             StartCoroutine(SpawnWave());
-            countTimer.ResteWaveFlag(); // í”Œë˜ê·¸ ì´ˆê¸°í™”
+            countTimer.ResteWaveFlag(); // ÇÃ·¡±× ÃÊ±âÈ­
         }
     }
 
@@ -65,9 +58,8 @@ public class EnemySpawn : MonoBehaviour
 
         int wave = countTimer.CurrentWave;
         int aCount = A_startCount + (wave - 1) * A_addPerWave;
-        int bCount = 0;
-        int cCount = 0;
 
+        int bCount = 0;
         if (wave >= B_startWave && wave <= maxWave)
         {
             bCount = B_startCount;
@@ -78,38 +70,27 @@ public class EnemySpawn : MonoBehaviour
                 bCount += evenSteps * B_addper2Wave;
             }
         }
+        Debug.Log($"[Wave {wave}] Spawn A: {aCount}, B: {bCount}");
 
-        if(wave >= C_starWave && wave <= maxWave)
+        for(int i = 0; i < aCount; i++)
         {
-            cCount = C_starCount + (wave - 4) * C_addperWave;
-        }
-        Debug.Log($"[Wave {wave}] Spawn A: {aCount}, B: {bCount} C : {cCount}");
-
-        List<GameObject> toSpawn = new List<GameObject>();
-        for (int i = 0; i < aCount; i++) toSpawn.Add(monsterPrefabA);
-        for (int i = 0; i < bCount; i++) toSpawn.Add(monsterPrefabB);
-        for (int i = 0; i < cCount; i++) toSpawn.Add(monsterPrefabC);
-
-        // ===== ë¦¬ìŠ¤íŠ¸ ì„ê¸° (Fisherâ€“Yates) =====
-        for (int i = 0; i < toSpawn.Count; i++)
-        {
-            int rand = Random.Range(i, toSpawn.Count);
-            GameObject temp = toSpawn[i];
-            toSpawn[i] = toSpawn[rand];
-            toSpawn[rand] = temp;
-        }
-
-        // ===== ì„ì€ ìˆœì„œëŒ€ë¡œ ìŠ¤í° =====
-        foreach (var prefab in toSpawn) // íƒ€ì… ë³€ìˆ˜ëª… in ì»¬ë ‰ì…˜ ëª… 
-        {
-            SpawnMonster(prefab);
-            if (spawnDelay > 0f)
+            SpawnMonster(monsterPrefabA);
+            if(spawnDelay > 0f)
+            {
                 yield return new WaitForSeconds(spawnDelay);
-            //else
-            //    yield return null;
+            }
         }
 
-        spawning = false; 
+        for(int i = 0;i < bCount;i++)
+        {
+            SpawnMonster(monsterPrefabB);
+            if(spawnDelay > 0f)
+            {
+                yield return new WaitForSeconds(spawnDelay);
+            }
+        }
+
+        spawning = false; ;
     }
 
     void SpawnMonster(GameObject prefab)
