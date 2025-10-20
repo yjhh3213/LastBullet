@@ -644,7 +644,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!95 &853962478
 Animator:
   serializedVersion: 5
@@ -1470,7 +1470,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d33d8a85742ab7c439e4ec141dc91c0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startTime: 60
+  startTime: 10
   timerText: {fileID: 808302826}
   waveText: {fileID: 1597457064}
 --- !u!114 &1833937601
@@ -1689,10 +1689,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b1b6fb7a81ca394fb6a8da2fbe0dce5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  monsterPrefab: {fileID: 832526262169581357, guid: 950cd29fc4cbff5479e1d656c0ac439e, type: 3}
+  monsterPrefabA: {fileID: 832526262169581357, guid: 950cd29fc4cbff5479e1d656c0ac439e, type: 3}
+  monsterPrefabB: {fileID: 6469340161698999690, guid: 87c74ca9fb5235d4db8d2cfb1ca9c9ee, type: 3}
   spawnDelay: 0.2
-  baseMonsterCount: 20
-  addPerWave: 10
+  minWave: 1
+  maxWave: 8
+  A_startCount: 20
+  A_addPerWave: 10
+  B_startWave: 3
+  B_startCount: 5
+  B_addper2Wave: 2
   minX: -50
   maxX: 50
   minZ: -50
