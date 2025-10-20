@@ -5,7 +5,6 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     public float Damage = 2.0f;
-    EnemyData EnemyData;
     
     private void OnCollisionEnter2D(Collision2D collision)
     {
